@@ -1,0 +1,29 @@
+# Binaries & build artifacts
+/target/
+**/*.rs.bk
+
+# Cargo specific
+Cargo.lock
+/.cargo/
+.cargo-ok
+
+# IDE/editor configs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Diesel migration logs
+diesel.toml
+migrations/**/up.sql.bk
+migrations/**/down.sql.bk
+
+# dotenv / env files (jangan commit file sensitif!)
+.env
+.env.*
+
+# Logs & te
