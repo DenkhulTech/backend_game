@@ -23,5 +23,5 @@ anyhow = "1.0"
 thiserror = "1.0"
 
 axum-extra = { version = "0.10.1", features = ["cookie"] }
-diesel = { version = "2.2.11", features = ["postgres", "chrono", "serde_json"] }
+diesel = { version = "2.2.11", features = ["postgres", "chrono", "serde_json", "r2d2"] }
 dotenvy = "0.15.7"

@@ -1,4 +1,4 @@
-use diesel::{ PgConnection, QueryDsl, RunQueryDsl, SelectableHelper,OptionalExtension};
+use diesel::*;
 use crate::models::user::{User, NewUser, UpdateUser};
 use crate::schema::users::dsl::*;
 use anyhow::Result;
@@ -6,7 +6,6 @@ use anyhow::Result;
 pub struct UserService;
 
 impl UserService {
-    // Create
     pub fn create_user(
         conn: &mut PgConnection,
         new_user: NewUser,
@@ -17,28 +16,29 @@ impl UserService {
             .get_result(conn)
     }
 
-    // Get All
     pub fn get_all_users(
         conn: &mut PgConnection,
     ) -> Result<Vec<User>, diesel::result::Error> {
+        let limit = 10;
+        let offset = 0;
         users
             .select(User::as_returning())
+            .limit(limit)
+            .offset(offset)
             .load(conn)
     }
 
-    // Get Single
-pub fn get_user(
-    conn: &mut PgConnection,
-    user_id: i32,
-) -> Result<Option<User>, diesel::result::Error> {
-    users
-        .find(user_id)
-        .select(User::as_select()) // ⛔ butuh derive Selectable
-        .first::<User>(conn)
-        .optional()
-}
+    pub fn get_user(
+        conn: &mut PgConnection,
+        user_id: i32,
+    ) -> Result<Option<User>, diesel::result::Error> {
+        users
+            .find(user_id)
+            .select(User::as_select())
+            .first::<User>(conn)
+            .optional()
+    }
 
-    // Update
     pub fn update_user(
         conn: &mut PgConnection,
         user_id: i32,
@@ -50,7 +50,6 @@ pub fn get_user(
             .get_result(conn)
     }
 
-    // Delete
     pub fn delete_user(
         conn: &mut PgConnection,
         user_id: i32,

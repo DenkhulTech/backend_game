@@ -1,37 +1,29 @@
 mod db;
 mod models;
 mod schema;
-
 mod services;
 mod controllers;
 mod routes;
 
-use axum::{Router};
-use std::sync::{Arc, Mutex};
-// use diesel::PgConnection;
-use tower_http::cors::{CorsLayer, Any};
+use axum::Router;
 use routes::user_route::user_routes;
+use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
 async fn main() {
-    // Setup database connection
-    let conn = db::establish_connection();
+    // Ganti establish_connection dengan init_pool (r2d2)
+    let pool = db::init_pool();
 
-     // 3. Bungkus koneksi untuk sharing thread-safe
-    let conn_mutex = Arc::new(Mutex::new(conn));
-    // Setup CORS
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
         .allow_headers(Any);
 
-    // Build application
     let app = Router::new()
-        .nest("/api", user_routes(conn_mutex))
+        .nest("/api", user_routes(pool.clone())) // clone pool per route
         .layer(cors);
 
-    // Run server
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    println!("Server running on http://localhost:3000");
+    println!("🚀 Server running at http://localhost:3000");
     axum::serve(listener, app).await.unwrap();
 }
