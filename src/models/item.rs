@@ -1,18 +1,12 @@
-// use diesel::prelude::*;
-// use serde::{Deserialize, Serialize};
-// use crate::schema::items;
+use serde::{Serialize, Deserialize};
+use sqlx::FromRow;
 
-// #[derive(Queryable, Insertable, Serialize, Deserialize)]
-// #[diesel(table_name = items)]
-// pub struct Item {
-//     pub id: i32,
-//     pub name: String,
-//     pub r#type: String, // gunakan `r#type` karena "type" adalah keyword Rust
-// }
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct Item {
+    pub id: i32,
+    pub name: String,
 
-// #[derive(Insertable)]
-// #[diesel(table_name = items)]
-// pub struct NewItem<'a> {
-//     pub name: &'a str,
-//     pub r#type: &'a str,
-// }
+    #[sqlx(rename = "type")] // <- Petakan ke kolom "type" di database
+    #[serde(rename = "type")] // <- Jika kamu kirim via JSON
+    pub type_: String,
+}

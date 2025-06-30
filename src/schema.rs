@@ -1,8 +1,20 @@
+﻿// @generated automatically by Diesel CLI.
+
+diesel::table! {
+    crop_growth_stages (id) {
+        id -> Int4,
+        crop_id -> Int4,
+        stage_index -> Int4,
+        stage_name -> Text,
+        duration_seconds -> Int4,
+        sprite_url -> Text,
+    }
+}
+
 diesel::table! {
     crops (id) {
         id -> Int4,
         name -> Text,
-        grow_time -> Int4,
         yield_item -> Int4,
         sell_price -> Int4,
     }
@@ -59,11 +71,13 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(crop_growth_stages -> crops (crop_id));
 diesel::joinable!(fields -> users (user_id));
 diesel::joinable!(inventory_items -> users (user_id));
 diesel::joinable!(tools -> items (item_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    crop_growth_stages,
     crops,
     fields,
     inventory_items,
